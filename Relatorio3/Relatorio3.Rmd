@@ -1,0 +1,10 @@
+---
+title: "Relatorio3"
+author: "Guilherme Fernandes,  Júlia Letícia, Victor Hugo"
+date: '05/07/2022'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+```
