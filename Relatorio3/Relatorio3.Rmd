@@ -11,7 +11,11 @@ knitr::opts_chunk$set(warning = FALSE)
 
 # Relatório 3
 
+## Introdução
+
+<p align="justify">
 Um grupo de engenheiros agrônomos testaram 4 diferentes tipos de fertilizante em áreas com plantação de feijão e mediram a produção em quilogramas. Ainda, anotaram se houve ataque de pragas ou não. Com isso, o objetivo deste relatório é compreender a produção das aréas em relação aos fertilizantes e a presença de praga.
+</p>
 
 ## Base de Dados
 
@@ -24,56 +28,65 @@ base |> head() |> knitr::kable()
 ### Sumário
 
 ID: ID da área plantada;<br>
-Producao: Quantidade da produçãoo em relação a área $i \in ID$;<br>
+Producao: Quantidade da produção em relação a área $i \in ID$;<br>
 Praga: 0 quando não houver presença de praga na área $i \in ID$;<br>
 Fertilizante: Qual tipo de fertilizante utilizado na área $i \in ID$;<br>
 
 ## Descritiva
 
-```{r}
+### Produção geral
+
+```{r, echo=FALSE}
 base |>
-	dplyr::summarise("Mediana" = median(Producao),
-									 "Média" = mean(Producao),
-									 "Mínimo" = min(Producao),
-									 "Máximo" = max(Producao),
-									 "Desvio Padrão" = sd(Producao),
-									 "Variância" = var(Producao)) |> 
+	dplyr::summarise("Mediana" = round(median(Producao), 2),
+									 "Média" = round(mean(Producao), 2),
+									 "Mínimo" = round(min(Producao), 2),
+									 "Máximo" = round(max(Producao), 2),
+									 "Desvio Padrão" = round(sd(Producao), 2),
+									 "Variância" = round(var(Producao), 2)) |> 
 	knitr::kable()
 ```
 
-```{r}
+### Produção em relação aos tipos de Fertilizante
+
+```{r, echo=FALSE, warning=FALSE}
 base |> 
 	dplyr::group_by(Fertilizante) |> 
-	dplyr::summarise("Mediana" = median(Producao),
-									 "Média" = mean(Producao),
-									 "Mínimo" = min(Producao),
-									 "Máximo" = max(Producao),
-									 "Desvio Padrão" = sd(Producao),
-									 "Variância" = var(Producao)) |> 
+	dplyr::summarise("Mediana" = round(median(Producao), 2),
+									 "Média" = round(mean(Producao), 2),
+									 "Mínimo" = round(min(Producao), 2),
+									 "Máximo" = round(max(Producao), 2),
+									 "Desvio Padrão" = round(sd(Producao), 2),
+									 "Variância" = round(var(Producao), 2)) |> 
 	knitr::kable()
 ```
 
-```{r}
+### Produção em relação a Praga
+
+```{r, echo=FALSE, warning=FALSE}
 base |> 
 	dplyr::group_by(Praga) |> 
-	dplyr::summarise("Mediana" = median(Producao),
-									 "Média" = mean(Producao),
-									 "Mínimo" = min(Producao),
-									 "Máximo" = max(Producao),
-									 "Desvio Padrão" = sd(Producao),
-									 "Variância" = var(Producao)) |> 
+	dplyr::summarise("Mediana" = round(median(Producao), 2),
+									 "Média" = round(mean(Producao), 2),
+									 "Mínimo" = round(min(Producao), 2),
+									 "Máximo" = round(max(Producao), 2),
+									 "Desvio Padrão" = round(sd(Producao), 2),
+									 "Variância" = round(var(Producao), 2)) |> 
 	knitr::kable()
 ```
 
-```{r}
+### Produção em relação a Praga e aos tipos de Fertilizante
+
+```{r, echo=FALSE, warning=FALSE, error=FALSE}
+options(dplyr.summarise.inform = FALSE)
 base |> 
 	dplyr::group_by(Fertilizante, Praga) |> 
-	dplyr::summarise("Mediana" = median(Producao),
-									 "Média" = mean(Producao),
-									 "Mínimo" = min(Producao),
-									 "Máximo" = max(Producao),
-									 "Desvio Padrão" = sd(Producao),
-									 "Variância" = var(Producao)) |> 
+	dplyr::summarise("Mediana" = round(median(Producao), 2),
+									 "Média" = round(mean(Producao), 2),
+									 "Mínimo" = round(min(Producao), 2),
+									 "Máximo" = round(max(Producao), 2),
+									 "Desvio Padrão" = round(sd(Producao), 2),
+									 "Variância" = round(var(Producao), 2)) |> 
 	knitr::kable()
 ```
 

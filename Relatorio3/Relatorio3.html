@@ -372,11 +372,16 @@ pre code {
 
 <div id="relatório-3" class="section level1">
 <h1>Relatório 3</h1>
-<p>Um grupo de engenheiros agrônomos testaram 4 diferentes tipos de
+<div id="introdução" class="section level2">
+<h2>Introdução</h2>
+<p align="justify">
+Um grupo de engenheiros agrônomos testaram 4 diferentes tipos de
 fertilizante em áreas com plantação de feijão e mediram a produção em
 quilogramas. Ainda, anotaram se houve ataque de pragas ou não. Com isso,
 o objetivo deste relatório é compreender a produção das aréas em relação
-aos fertilizantes e a presença de praga.</p>
+aos fertilizantes e a presença de praga.
+</p>
+</div>
 <div id="base-de-dados" class="section level2">
 <h2>Base de Dados</h2>
 <table>
@@ -429,7 +434,7 @@ aos fertilizantes e a presença de praga.</p>
 </table>
 <div id="sumário" class="section level3">
 <h3>Sumário</h3>
-<p>ID: ID da área plantada;<br> Producao: Quantidade da produçãoo em
+<p>ID: ID da área plantada;<br> Producao: Quantidade da produção em
 relação a área <span class="math inline">\(i \in ID\)</span>;<br> Praga:
 0 quando não houver presença de praga na área <span class="math inline">\(i \in ID\)</span>;<br> Fertilizante: Qual tipo de
 fertilizante utilizado na área <span class="math inline">\(i \in
@@ -438,14 +443,8 @@ ID\)</span>;<br></p>
 </div>
 <div id="descritiva" class="section level2">
 <h2>Descritiva</h2>
-<pre class="r"><code>base |&gt;
-    dplyr::summarise(&quot;Mediana&quot; = median(Producao),
-                                     &quot;Média&quot; = mean(Producao),
-                                     &quot;Mínimo&quot; = min(Producao),
-                                     &quot;Máximo&quot; = max(Producao),
-                                     &quot;Desvio Padrão&quot; = sd(Producao),
-                                     &quot;Variância&quot; = var(Producao)) |&gt; 
-    knitr::kable()</code></pre>
+<div id="produção-geral" class="section level3">
+<h3>Produção geral</h3>
 <table>
 <thead>
 <tr class="header">
@@ -460,32 +459,26 @@ ID\)</span>;<br></p>
 <tbody>
 <tr class="odd">
 <td align="right">485</td>
-<td align="right">546.0833</td>
+<td align="right">546.08</td>
 <td align="right">55</td>
 <td align="right">1195</td>
-<td align="right">307.2675</td>
+<td align="right">307.27</td>
 <td align="right">94413.3</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>base |&gt; 
-    dplyr::group_by(Fertilizante) |&gt; 
-    dplyr::summarise(&quot;Mediana&quot; = median(Producao),
-                                     &quot;Média&quot; = mean(Producao),
-                                     &quot;Mínimo&quot; = min(Producao),
-                                     &quot;Máximo&quot; = max(Producao),
-                                     &quot;Desvio Padrão&quot; = sd(Producao),
-                                     &quot;Variância&quot; = var(Producao)) |&gt; 
-    knitr::kable()</code></pre>
-<table style="width:100%;">
+</div>
+<div id="produção-em-relação-aos-tipos-de-fertilizante" class="section level3">
+<h3>Produção em relação aos tipos de Fertilizante</h3>
+<table>
 <colgroup>
 <col width="19%" />
-<col width="11%" />
-<col width="13%" />
+<col width="12%" />
 <col width="10%" />
 <col width="10%" />
-<col width="20%" />
-<col width="14%" />
+<col width="10%" />
+<col width="21%" />
+<col width="15%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -502,50 +495,44 @@ ID\)</span>;<br></p>
 <tr class="odd">
 <td align="left">A</td>
 <td align="right">520.0</td>
-<td align="right">589.5000</td>
+<td align="right">589.50</td>
 <td align="right">388</td>
 <td align="right">843</td>
-<td align="right">191.0306</td>
+<td align="right">191.03</td>
 <td align="right">36492.70</td>
 </tr>
 <tr class="even">
 <td align="left">B</td>
 <td align="right">941.5</td>
-<td align="right">938.3333</td>
+<td align="right">938.33</td>
 <td align="right">697</td>
 <td align="right">1195</td>
-<td align="right">180.8620</td>
+<td align="right">180.86</td>
 <td align="right">32711.07</td>
 </tr>
 <tr class="odd">
 <td align="left">C</td>
 <td align="right">251.0</td>
-<td align="right">250.5000</td>
+<td align="right">250.50</td>
 <td align="right">55</td>
 <td align="right">557</td>
-<td align="right">180.2096</td>
+<td align="right">180.21</td>
 <td align="right">32475.50</td>
 </tr>
 <tr class="even">
 <td align="left">D</td>
 <td align="right">379.5</td>
-<td align="right">406.0000</td>
+<td align="right">406.00</td>
 <td align="right">286</td>
 <td align="right">640</td>
-<td align="right">131.6678</td>
+<td align="right">131.67</td>
 <td align="right">17336.40</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>base |&gt; 
-    dplyr::group_by(Praga) |&gt; 
-    dplyr::summarise(&quot;Mediana&quot; = median(Producao),
-                                     &quot;Média&quot; = mean(Producao),
-                                     &quot;Mínimo&quot; = min(Producao),
-                                     &quot;Máximo&quot; = max(Producao),
-                                     &quot;Desvio Padrão&quot; = sd(Producao),
-                                     &quot;Variância&quot; = var(Producao)) |&gt; 
-    knitr::kable()</code></pre>
+</div>
+<div id="produção-em-relação-a-praga" class="section level3">
+<h3>Produção em relação a Praga</h3>
 <table>
 <thead>
 <tr class="header">
@@ -562,43 +549,35 @@ ID\)</span>;<br></p>
 <tr class="odd">
 <td align="left">0</td>
 <td align="right">456</td>
-<td align="right">509.7333</td>
+<td align="right">509.73</td>
 <td align="right">55</td>
 <td align="right">1042</td>
-<td align="right">298.6117</td>
+<td align="right">298.61</td>
 <td align="right">89168.92</td>
 </tr>
 <tr class="even">
 <td align="left">1</td>
 <td align="right">514</td>
-<td align="right">606.6667</td>
+<td align="right">606.67</td>
 <td align="right">280</td>
 <td align="right">1195</td>
-<td align="right">329.8272</td>
+<td align="right">329.83</td>
 <td align="right">108786.00</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>base |&gt; 
-    dplyr::group_by(Fertilizante, Praga) |&gt; 
-    dplyr::summarise(&quot;Mediana&quot; = median(Producao),
-                                     &quot;Média&quot; = mean(Producao),
-                                     &quot;Mínimo&quot; = min(Producao),
-                                     &quot;Máximo&quot; = max(Producao),
-                                     &quot;Desvio Padrão&quot; = sd(Producao),
-                                     &quot;Variância&quot; = var(Producao)) |&gt; 
-    knitr::kable()</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;Fertilizante&#39;. You can override using the
-## `.groups` argument.</code></pre>
-<table style="width:100%;">
+</div>
+<div id="produção-em-relação-a-praga-e-aos-tipos-de-fertilizante" class="section level3">
+<h3>Produção em relação a Praga e aos tipos de Fertilizante</h3>
+<table>
 <colgroup>
 <col width="17%" />
-<col width="7%" />
+<col width="8%" />
 <col width="10%" />
-<col width="13%" />
+<col width="10%" />
 <col width="9%" />
 <col width="9%" />
-<col width="18%" />
+<col width="19%" />
 <col width="13%" />
 </colgroup>
 <thead>
@@ -618,84 +597,85 @@ ID\)</span>;<br></p>
 <td align="left">A</td>
 <td align="left">0</td>
 <td align="right">669.0</td>
-<td align="right">658.7500</td>
+<td align="right">658.75</td>
 <td align="right">454</td>
 <td align="right">843</td>
-<td align="right">197.46624</td>
+<td align="right">197.47</td>
 <td align="right">38992.92</td>
 </tr>
 <tr class="even">
 <td align="left">A</td>
 <td align="left">1</td>
 <td align="right">451.0</td>
-<td align="right">451.0000</td>
+<td align="right">451.00</td>
 <td align="right">388</td>
 <td align="right">514</td>
-<td align="right">89.09545</td>
+<td align="right">89.10</td>
 <td align="right">7938.00</td>
 </tr>
 <tr class="odd">
 <td align="left">B</td>
 <td align="left">0</td>
 <td align="right">861.0</td>
-<td align="right">866.6667</td>
+<td align="right">866.67</td>
 <td align="right">697</td>
 <td align="right">1042</td>
-<td align="right">172.56979</td>
+<td align="right">172.57</td>
 <td align="right">29780.33</td>
 </tr>
 <tr class="even">
 <td align="left">B</td>
 <td align="left">1</td>
 <td align="right">1022.0</td>
-<td align="right">1010.0000</td>
+<td align="right">1010.00</td>
 <td align="right">813</td>
 <td align="right">1195</td>
-<td align="right">191.28251</td>
+<td align="right">191.28</td>
 <td align="right">36589.00</td>
 </tr>
 <tr class="odd">
 <td align="left">C</td>
 <td align="left">0</td>
 <td align="right">155.5</td>
-<td align="right">166.5000</td>
+<td align="right">166.50</td>
 <td align="right">55</td>
 <td align="right">300</td>
-<td align="right">114.51492</td>
+<td align="right">114.51</td>
 <td align="right">13113.67</td>
 </tr>
 <tr class="even">
 <td align="left">C</td>
 <td align="left">1</td>
 <td align="right">418.5</td>
-<td align="right">418.5000</td>
+<td align="right">418.50</td>
 <td align="right">280</td>
 <td align="right">557</td>
-<td align="right">195.86858</td>
+<td align="right">195.87</td>
 <td align="right">38364.50</td>
 </tr>
 <tr class="odd">
 <td align="left">D</td>
 <td align="left">0</td>
 <td align="right">405.0</td>
-<td align="right">436.2500</td>
+<td align="right">436.25</td>
 <td align="right">295</td>
 <td align="right">640</td>
-<td align="right">151.24015</td>
+<td align="right">151.24</td>
 <td align="right">22873.58</td>
 </tr>
 <tr class="even">
 <td align="left">D</td>
 <td align="left">1</td>
 <td align="right">345.5</td>
-<td align="right">345.5000</td>
+<td align="right">345.50</td>
 <td align="right">286</td>
 <td align="right">405</td>
-<td align="right">84.14571</td>
+<td align="right">84.15</td>
 <td align="right">7080.50</td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 
