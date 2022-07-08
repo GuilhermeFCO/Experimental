@@ -1,11 +1,11 @@
 ---
 title: "Relatorio 3 - MAF 261 - Estatística Experimental"
-author: "Guilherme Fernandes - 3398,  Júlia Letícia - 3732, Victor Hugo - "
+author: "Guilherme Fernandes - 3398,  Júlia Letícia - 3732, Victor Hugo - 3510"
 date: '05/07/2022'
 output:
-  html_document:
+  pdf_document:
     toc: true
-    theme: cosmo
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -79,13 +79,13 @@ summary(fit)
 
 A um nível de significância de 5% foi possível ver que a produção é diferente em relação aos fertilizantes. Dessa forma vamos testar os pressupostos e depois encontrar onde está a diferença.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center', fig.width=6}
 plot(fit, wich = 5, pch = 19)
 ```
 
 Visualmente não é possível observar algum padrão, logo temos que são dados aleatórios.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center', fig.width=6}
 car::qqPlot(fit$residuals, pch = 19)
 ```
 
@@ -96,6 +96,8 @@ shapiro.test(fit$residuals)
 ```
 
 Assumimos então que os resíduos são normais ao nível de significância de 5%.
+
+ Iremos utilizar o Teste de Bartlett para testar a Homoscedasticidade.
 
 ```{r, echo=FALSE}
 bartlett.test(Producao ~ Fertilizante, data = base)
@@ -115,11 +117,17 @@ Como $B$ é diferente estatisticamente de todos e possui a maior media de Produ�
 
 ## Objetivo 2
 
-### Proporção da Praga em relação ao Fertilizante
+### Quantidade de Praga em relação ao Fertilizante
 
 ```{r, echo=FALSE, warning=FALSE, fig.width=4, fig.align='center'}
 tab <- table(base$Fertilizante, base$Praga)
-tab |> knitr::kable()
+tab
+```
+
+### Proporção de Praga em relação ao Fertilizante
+
+```{r, echo=FALSE, warning=FALSE, fig.width=4, fig.align='center'}
+prop.table(tab) |> round(2)
 ```
 
 ```{r, echo=FALSE, fig.align='center', fig.width=5}
@@ -129,16 +137,23 @@ base |>
 	theme_bw() +
 	ylab("Número de Pragas")
 ```
+
 Visualmente não há diferença na presença de Praga nos diferentes tipos de Fertilizante.
 
-### Teste de Fisher
+### ANOVA
 
-```{r, echo=FALSE}
-chisq.test(tab)
+```{r, echo = FALSE}
+fit <- glm(Praga ~ Fertilizante, data = base, family = binomial())
+summary(fit)
 ```
 
-Foi feito um Teste Qui-Quadrado para avaliar a proporção de Praga em cada um dos Fertilizantes.
-A diferença não foi significativa, ou seja, as proporções são iguais estatisticamentes a um nível de significância de 5%.
+Primeiramente foi feita uma regressão logística, onde em nenhum tratamento foi encontrada uma diferença significativa ao nível de significância de 5%.
+
+```{r, echo = FALSE}
+anova(fit, test="Chisq")
+```
+
+Foi feita uma anova e constatamos que não há diferença estatística a um nível de significância de 5%, ou seja, nenhum Fertilizante causa menos Praga.
 
 ## Objetivo 3
 
@@ -175,4 +190,6 @@ Como o P Valor do Fertilizante:Praga não foi significativo, temos que a Praga n
 
 ## Conclusão
 
-Concluímos que o melhor fertilizante é o B, pois tem a maior produção e possui a mesma incidência de pragas do que os demais fertilizantes.
+<p align="justify">
+Concluímos que o melhor fertilizante é o B, pois tem a maior produção, também concluímos que nenhum fertilizante causa menos pragas do que os demais.
+</p>
