@@ -1,8 +1,11 @@
 ---
-title: "Relatorio3"
-author: "Guilherme Fernandes,  Júlia Letícia, Victor Hugo"
+title: "Relatorio 3 - MAF 261 - Estatística Experimental"
+author: "Guilherme Fernandes - 3398,  Júlia Letícia - 3732, Victor Hugo - "
 date: '05/07/2022'
-output: html_document
+output:
+  html_document:
+    toc: true
+    theme: cosmo
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +18,7 @@ library(ggplot2)
 ## Introdução
 
 <p align="justify">
-Um grupo de engenheiros agrônomos testaram 4 diferentes tipos de fertilizante em áreas com plantação de feijão e mediram a produção em quilogramas. Ainda, anotaram se houve ataque de pragas ou não. Com isso, o objetivo deste relatório é compreender a produção das aréas em relação aos fertilizantes e a presença de praga.
+Um grupo de engenheiros agrônomos testaram 4 diferentes tipos de fertilizante em áreas com plantação de feijão e mediram a produção em quilogramas. Ainda, anotaram se houve ataque de pragas ou não.
 </p>
 
 ## Base de Dados
@@ -23,6 +26,7 @@ Um grupo de engenheiros agrônomos testaram 4 diferentes tipos de fertilizante e
 ```{r, include=TRUE, echo=FALSE}
 base <- openxlsx::read.xlsx("./dados_atividade.xlsx")
 base$Praga <- as.factor(base$Praga)
+base$Fertilizante <- as.factor(base$Fertilizante)
 base |> head() |> knitr::kable()
 ```
 
@@ -33,32 +37,15 @@ Producao: Quantidade da produção em relação a área $i \in ID$;<br>
 Praga: 0 quando não houver presença de praga na área $i \in ID$;<br>
 Fertilizante: Qual tipo de fertilizante utilizado na área $i \in ID$;<br>
 
-## Descritiva
+## Objetivos
 
-### Produção geral
+Temos como objetivo descobrir se algum fertilizante é melhor para a produção (1), se
+algum fertilizante causa menos pragas (2) e se as pragas afetam a produção de cada
+tipo de fertilizante (3).
 
-```{r, echo=FALSE, fig.align='center'}
-base |>
-	dplyr::summarise("Mediana" = round(median(Producao), 2),
-									 "Média" = round(mean(Producao), 2),
-									 "Mínimo" = round(min(Producao), 2),
-									 "Máximo" = round(max(Producao), 2),
-									 "Desvio Padrão" = round(sd(Producao), 2),
-									 "Variância" = round(var(Producao), 2)) |> 
-	knitr::kable()
-```
+## Objetivo 1
 
-```{r, echo=FALSE, fig.align='center', fig.width=4}
-base |> 
-	ggplot(aes(y = Producao)) +
-	geom_boxplot() +
-	theme_bw() +
-	labs(y = "Produção") +
-	scale_y_continuous(limits = c(0, 1300), breaks = seq(0, 1300, 100)) +
-	theme(axis.text.x = element_blank())
-```
-
-### Produção em relação aos tipos de Fertilizante
+### Descritiva da produção em relação aos tipos de Fertilizante
 
 ```{r, echo=FALSE, warning=FALSE}
 base |> 
@@ -72,19 +59,88 @@ base |>
 	knitr::kable()
 ```
 
-### Produção em relação a Praga
-
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, fig.align='center', fig.width=4}
 base |> 
-	dplyr::group_by(Praga) |> 
-	dplyr::summarise("Mediana" = round(median(Producao), 2),
-									 "Média" = round(mean(Producao), 2),
-									 "Mínimo" = round(min(Producao), 2),
-									 "Máximo" = round(max(Producao), 2),
-									 "Desvio Padrão" = round(sd(Producao), 2),
-									 "Variância" = round(var(Producao), 2)) |> 
-	knitr::kable()
+	ggplot(aes(y = Producao, x = Fertilizante)) +
+	geom_boxplot() +
+	theme_bw() +
+	labs(y = "Produção") +
+	scale_y_continuous(limits = c(0, 1300), breaks = seq(0, 1300, 100))
 ```
+
+Podemos observar que $B$ visualmente é superior que os outros, agora iremos analisar estatisticamente.
+
+### ANOVA
+
+```{r, echo=FALSE}
+fit <- aov(Producao ~ Fertilizante, data = base)
+summary(fit)
+```
+
+A um nível de significância de 5% foi possível ver que a produção é diferente em relação aos fertilizantes. Dessa forma vamos testar os pressupostos e depois encontrar onde está a diferença.
+
+```{r, echo=FALSE}
+plot(fit, wich = 5, pch = 19)
+```
+
+Visualmente não é possível observar algum padrão, logo temos que são dados aleatórios.
+
+```{r, echo=FALSE}
+car::qqPlot(fit$residuals, pch = 19)
+```
+
+A um ponto somente fora do envelope, para isso vamos utilizar o teste de Shapiro-Wilks.
+
+```{r, echo=FALSE}
+shapiro.test(fit$residuals)
+```
+
+Assumimos então que os resíduos são normais ao nível de significância de 5%.
+
+```{r, echo=FALSE}
+bartlett.test(Producao ~ Fertilizante, data = base)
+```
+
+Dessa forma assumimos que a variância é igual para os 4 tipos de fertilizantes em um nível de significância de 5%.
+
+```{r, echo=FALSE}
+TukeyHSD(fit)
+```
+
+Através do teste de tukey acima, a um nível de significância de 5% encontramos quê:
+
+$A \neq B, A \neq C, B \neq C, B \neq D$
+
+Como $B$ é diferente estatisticamente de todos e possui a maior media de Produção, podemos concluir que o Fertilizante B é o melhor dentre todos.
+
+## Objetivo 2
+
+### Proporção da Praga em relação ao Fertilizante
+
+```{r, echo=FALSE, warning=FALSE, fig.width=4, fig.align='center'}
+tab <- table(base$Fertilizante, base$Praga)
+tab |> knitr::kable()
+```
+
+```{r, echo=FALSE, fig.align='center', fig.width=5}
+base |> 
+	ggplot(aes(x = Fertilizante, fill = Praga)) +
+	geom_bar() +
+	theme_bw() +
+	ylab("Número de Pragas")
+```
+Visualmente não há diferença na presença de Praga nos diferentes tipos de Fertilizante.
+
+### Teste de Fisher
+
+```{r, echo=FALSE}
+chisq.test(tab)
+```
+
+Foi feito um Teste Qui-Quadrado para avaliar a proporção de Praga em cada um dos Fertilizantes.
+A diferença não foi significativa, ou seja, as proporções são iguais estatisticamentes a um nível de significância de 5%.
+
+## Objetivo 3
 
 ### Produção em relação a Praga e aos tipos de Fertilizante
 
@@ -101,3 +157,22 @@ base |>
 	knitr::kable()
 ```
 
+```{r, echo=FALSE, fig.align='center', fig.width=5}
+base |> 
+	ggplot(aes(y = Producao, x = Fertilizante, fill = Praga)) +
+	geom_boxplot() +
+	theme_bw() +
+	labs(y = "Produção") +
+	scale_y_continuous(limits = c(0, 1300), breaks = seq(0, 1300, 100))
+```
+
+```{r, echo=FALSE}
+fit <- aov(Producao ~ Fertilizante * Praga, data = base)
+summary(fit)
+```
+
+Como o P Valor do Fertilizante:Praga não foi significativo, temos que a Praga não influencia a Produção de cada Fertilizante. Não iremos aprofundar pois será o tema da próxima aula.
+
+## Conclusão
+
+Concluímos que o melhor fertilizante é o B, pois tem a maior produção e possui a mesma incidência de pragas do que os demais fertilizantes.
